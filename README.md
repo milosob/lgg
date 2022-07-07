@@ -51,7 +51,7 @@ sudo cmake --install .
 
 ### Usage
 
-To use a library in a project, import it with the installed CMake configuration:
+To use the library in a project, import it with the installed CMake configuration:
 
 ```cmake
 find_package(lgg CONFIG REQUIRED)
