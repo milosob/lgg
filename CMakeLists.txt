@@ -4,6 +4,8 @@ project(
         VERSION 0.0.1
 )
 
+include(GNUInstallDirs)
+
 # Configuration
 set(CMAKE_CXX_STANDARD 20)
 
@@ -30,8 +32,9 @@ install(
         TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}-config
 )
+
 install(
-        DIRECTORY ${INCLUDE_DIR}/
+        DIRECTORY ${INCLUDE_DIR}/${PROJECT_NAME}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
 )
 
