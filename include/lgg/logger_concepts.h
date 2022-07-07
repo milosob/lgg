@@ -26,7 +26,7 @@ namespace lgg
         a_record.skip()
         } -> std::same_as<bool>;
         {
-        a_record.write(a_ostream)
+        a_record.dump(a_ostream)
         } -> std::same_as<void>;
         {
         a_ostream << a_record

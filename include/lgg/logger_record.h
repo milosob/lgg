@@ -25,8 +25,8 @@ namespace lgg
     public:
         
         virtual auto
-        write(
+        dump(
             std::ostream& a_ostream
-        ) const -> void = 0;
+        ) -> void = 0;
     };
 }

@@ -4,6 +4,7 @@
 
 #include <mutex>
 #include <ostream>
+#include <string_view>
 #include <utility>
 
 #include <lgg/logger.h>
@@ -18,6 +19,8 @@ namespace lgg
         using type = logger_ostream_basic;
         
         using record_type = logger_record_basic;
+        
+        using string_view_type = std::string_view;
     
     public:
         
@@ -33,12 +36,12 @@ namespace lgg
         
         virtual auto
         write(
-            const record_type& a_record
+            record_type& a_record
         ) -> type& = 0;
         
         virtual auto
         write(
-            std::istream& a_istream
+            string_view_type a_string_view
         ) -> type& = 0;
     };
     
@@ -98,7 +101,7 @@ namespace lgg
         
         auto
         write(
-            const record_type& a_record
+            record_type& a_record
         ) -> type& override
         {
             {
@@ -108,7 +111,7 @@ namespace lgg
                     m_stream
                 );
                 
-                a_record.write(
+                a_record.dump(
                     m_stream
                 );
             }
@@ -118,10 +121,9 @@ namespace lgg
         
         auto
         write(
-            std::istream& a_istream
+            string_view_type a_string_view
         ) -> type& override
         {
-            auto start_g = a_istream.tellg();
             {
                 std::unique_lock lock{m_mutex};
                 
@@ -129,9 +131,11 @@ namespace lgg
                     m_stream
                 );
                 
-                m_stream << a_istream.rdbuf();
+                m_stream.write(
+                    a_string_view.data(),
+                    static_cast<std::streamsize>(a_string_view.size())
+                );
             }
-            a_istream.seekg(start_g);
             
             return *this;
         }

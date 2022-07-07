@@ -99,7 +99,6 @@ public:
     clear(
     ) -> void
     {
-        m_buffer.seekg(0);
         m_buffer.seekp(0);
     }
     
@@ -114,12 +113,12 @@ public:
     }
     
     /**
-     * Implement the interface write function that writes to the stream.
+     * Implement the interface dump function that writes to the stream.
      */
     auto
-    write(
+    dump(
         std::ostream& a_ostream
-    ) const -> void override
+    ) -> void override
     {
         auto time      = std::tm{};
         auto timestamp = std::chrono::system_clock::to_time_t(p_timestamp);
@@ -140,7 +139,10 @@ public:
             << "[level="
             << p_level
             << "]: "
-            << m_buffer.view()
+            << std::string_view{
+                m_buffer.view().data(),
+                static_cast<std::size_t>(m_buffer.tellp())
+            }
             /*
              * Flush by default to avoid losing logs.
              */
@@ -167,16 +169,27 @@ public:
         return a_record;
     }
     
+    friend auto
+    operator <<(
+        type& a_record,
+        logger_level a_arg
+    ) -> type&
+    {
+        a_record.p_level = a_arg;
+        
+        return a_record;
+    }
+    
     /**
      * Implement ostream << operator, for buffering purposes.
      */
     friend auto
     operator <<(
         std::ostream& a_stream,
-        const type& a_record
+        type& a_record
     ) -> std::ostream&
     {
-        a_record.write(
+        a_record.dump(
             a_stream
         );
         
@@ -229,7 +242,7 @@ main(
 )
 {
     /**
-     * Provide the example with optional path argument to also write to the file log.
+     * Provide the example with optional path argument to also dump to the file log.
      */
     std::ofstream log_file;
     
@@ -296,10 +309,17 @@ main(
         "logger_example"
     };
     
-    lg << "message_1_part_0 " << "message_1_part_1 " << "message_1_part_2" << lgg::push;
+    lg
+        << "message_1_part_0 "
+        << "message_1_part_1 "
+        << "message_1_part_2"
+        << "message_1_part_2"
+        << "message_1_part_2"
+        << lgg::push;
     lg << "message_2_part_0 " << "message_2_part_1 " << "message_2_part_2" << lgg::push;
-    lg << "message_3_part_0 " << "message_3_part_1 " << "message_3_part_2 ";
-    lg << "message_3_part_3 " << "message_3_part_4 " << "message_3_part_5" << lgg::push;
+    lg << "message_3_part_0 " << "message_3_part_1 " << "message_3_part_2 " << lgg::push;
+    
+    lg << logger_level::FATAL << "message_4_part_0 " << "message_4_part_1 " << lgg::push;
     
     if (log_file.is_open())
     {

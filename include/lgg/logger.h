@@ -151,20 +151,22 @@ namespace lgg
             {
                 if constexpr(gp_buffered)
                 {
-                    auto start_g = m_buffer.tellg();
-                    auto start_p = m_buffer.tellp();
-                    
                     m_buffer << m_record;
+                    
+                    auto view = std::string_view{
+                        m_buffer.view().data(),
+                        static_cast<size_t>(m_buffer.tellp())
+                    };
                     
                     for (auto& os: m_ostreams)
                     {
                         os->write(
-                            m_buffer
+                            view
                         );
                     }
                     
-                    m_buffer.seekg(start_g);
-                    m_buffer.seekp(start_p);
+                    m_buffer.clear();
+                    m_buffer.seekp(0);
                 }
                 else
                 {
