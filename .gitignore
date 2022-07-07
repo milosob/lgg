@@ -1,0 +1,11 @@
+# CMake builds
+/cmake-*/
+
+# JetBrains
+.idea/shelf/
+.idea/dictionaries
+.idea/inspectionProfiles
+.idea/workspace.xml
+
+# VisualStudio
+.vs/
