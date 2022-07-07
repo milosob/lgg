@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <lgg/logger_record.h>
+
 namespace lgg
 {
     template<
@@ -19,6 +21,10 @@ namespace lgg
         requires std::is_default_constructible<
             t_record
         >::value;
+        requires std::is_base_of_v<
+            logger_record_basic,
+            t_record
+        >;
         {
         a_record.clear()
         } -> std::same_as<void>;
