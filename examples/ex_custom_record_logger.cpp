@@ -47,6 +47,9 @@ operator <<(
  */
 class logger_record
     :
+        /**
+         * Must inherit from logger_record_basic.
+         */
         public lgg::logger_record_basic
 {
 public:
