@@ -309,16 +309,10 @@ main(
         "logger_example"
     };
     
-    lg
-        << "message_1_part_0 "
-        << "message_1_part_1 "
-        << "message_1_part_2"
-        << "message_1_part_2"
-        << "message_1_part_2"
-        << lgg::push;
+    lg << "message_1_part_0 " << "message_1_part_1 " << "message_1_part_2" << lgg::push;
     lg << "message_2_part_0 " << "message_2_part_1 " << "message_2_part_2" << lgg::push;
-    lg << "message_3_part_0 " << "message_3_part_1 " << "message_3_part_2 " << lgg::push;
-    
+    lg << "message_3_part_0 " << "message_3_part_1 " << "message_3_part_2";
+    lg << "message_3_part_3 " << lgg::push;
     lg << logger_level::FATAL << "message_4_part_0 " << "message_4_part_1 " << lgg::push;
     
     if (log_file.is_open())
