@@ -1,31 +1,27 @@
 ### Description
 
-Lgg is a simple logging library focused around record implementation with modern
-syntax and configuration by template parameters.
+Simple logging library focused around record implementation with modern syntax
+and configuration by template parameters.
 
 Characteristic:
 
 - C++ 20
 - Header only
-- Dependency free
 - Syntax like `std::ostream`
 
 Features:
 
-- Supports multiple inputs and outputs at the same time
-- Based on the user implementation of the record, that fulfills type contract
-  enforced by concepts
-- User defined formatting
-- User defined, both static and dynamic filtering
-- Easy extensible by callbacks
-- Ability to provide custom log rotation, retention logic and more
+- Supports multiple inputs and outputs at the same time.
+- Based on the user implementation of the record, that fulfills type contract.
+  enforced by concepts.
+- User defined formatting.
+- User defined, both static and dynamic filtering.
+- Easy extensible by callbacks.
+- Ability to provide custom log rotation, retention logic and more.
 
-### Installation
+### Usage
 
-Lgg is a header only library, no compilation is required unless you want to
-compile the examples.
-
-Follow the instructions to install the project:
+Follow the instructions to use the project:
 
 ```shell
 git clone https://github.com/milosob/lgg.git lgg
@@ -49,9 +45,7 @@ cmake ../lgg -DLGG_EXAMPLES=ON && make
 sudo cmake --install .
 ```
 
-### Usage
-
-To use the library in a project, import it with the installed CMake configuration:
+Import the package into the CMake project:
 
 ```cmake
 find_package(lgg CONFIG REQUIRED)
@@ -64,6 +58,8 @@ Then, include the following header:
 ```c++
 #include <lgg/logger.h>
 ```
+
+### Examples
 
 Extensive usage example with commentary, covering most of the features is
 available in the `examples` directory.
