@@ -8,13 +8,16 @@ namespace lgg
 {
     namespace filter
     {
-        struct pass
+        namespace group
         {
-        };
+            struct pass
+            {
+            };
+        }
     }
     
     template<
-        typename t_filter = filter::pass
+        typename t_filter = filter::group::pass
     >
     class logger_filter
     {

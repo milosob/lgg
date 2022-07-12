@@ -1,15 +1,17 @@
+
+
 #include <chrono>
 #include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-
 #include <string>
 #include <utility>
+
 #include <lgg/logger.h>
 
 /**
- * Implement a custom logger levels.
+ * Logger level.
  */
 enum logger_level
     :
@@ -22,6 +24,9 @@ enum logger_level
     FATAL = 4
 };
 
+/**
+ * Logger level to string stream conversion.
+ */
 auto
 operator <<(
     std::ostream& a_ostream,
@@ -43,7 +48,7 @@ operator <<(
 }
 
 /**
- * Implement a custom record type.
+ * Logger record.
  */
 class logger_record
     :
@@ -96,7 +101,7 @@ public:
 public:
     
     /**
-     * Called always after pushing the log.
+     * Always called after the record has been pushed.
      */
     auto
     clear(
@@ -106,7 +111,7 @@ public:
     }
     
     /**
-     * Skip pushing the log when this returns true.
+     * Skip pushing the record whenever this returns true.
      */
     auto
     skip(
@@ -116,7 +121,7 @@ public:
     }
     
     /**
-     * Implement the interface dump function that writes to the stream.
+     * Dump function that is responsible for stream writes.
      */
     auto
     dump(
@@ -155,8 +160,23 @@ public:
 public:
     
     /**
-     * Implement how does the record handle writing to it.
-     * It is possible to provide more accurate specializations for setter like behavior.
+     * << operator for ostream buffering
+     */
+    friend auto
+    operator <<(
+        std::ostream& a_stream,
+        type& a_record
+    ) -> std::ostream&
+    {
+        a_record.dump(
+            a_stream
+        );
+        
+        return a_stream;
+    }
+    
+    /**
+     * How does the record handle writing to it?
      */
     template<
         typename t_arg
@@ -172,6 +192,9 @@ public:
         return a_record;
     }
     
+    /**
+     * It is possible to provide more accurate specializations for setter like behavior.
+     */
     friend auto
     operator <<(
         type& a_record,
@@ -181,22 +204,6 @@ public:
         a_record.p_level = a_arg;
         
         return a_record;
-    }
-    
-    /**
-     * Implement ostream << operator, for buffering purposes.
-     */
-    friend auto
-    operator <<(
-        std::ostream& a_stream,
-        type& a_record
-    ) -> std::ostream&
-    {
-        a_record.dump(
-            a_stream
-        );
-        
-        return a_stream;
     }
 };
 
@@ -228,10 +235,9 @@ lgg::logger_filter<
 using logger = lgg::logger<
     logger_record,
     /**
-     * Use defined logger or use predefined one:
-     * lgg::logger_filter<> that accepts everything.
+     * Use a predefined filter group such as lgg::filter::group::pass or self-defined.
      */
-    lgg::logger_filter<logger_filter_group>,
+    lgg::logger_filter<logger_filter_group>, //
     /**
      * If more than one output is given, consider enabling buffered logging.
      */
@@ -250,8 +256,7 @@ main(
     std::ofstream log_file;
     
     /**
-     * These are logging ostreams.
-     * A record will be written to each of them.
+     * These are logging ostreams, a record will be written to each of them.
      * They can be shared across many loggers.
      *
      * The library ostream specializations by default are thread safe using mutexes.
@@ -284,26 +289,22 @@ main(
     }
     
     logger lg{
+        lgos,
+        /**
+         * This is called before pushing a record.
+         */
+        [](logger::record_type& a_record) -> logger::record_type&
         {
-            lgos
+            a_record.p_timestamp = std::chrono::system_clock::now();
+            
+            return a_record;
         },
         /**
-         * This is invoked before every push.
+         * This is called after pushing a record.
          */
-        logger::cb_push_pre_type{
-            [](logger::record_type& a_record)
-            {
-                a_record.p_timestamp = std::chrono::system_clock::now();
-            }
-        },
-        /**
-         * This is invoked after every push.
-         */
-        logger::cb_push_post_type{
-            [](logger::record_type& a_record)
-            {
-                a_record.p_level = DEBUG;
-            }
+        [](logger::record_type& a_record)
+        {
+            a_record.p_level = DEBUG;
         },
         /**
          * From here, the arguments are passed to the record constructor.

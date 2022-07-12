@@ -43,9 +43,19 @@ namespace lgg
     public:
         
         logger_callback(
-            callback_type a_callback
+            const callback_type& a_callback
         ) :
             m_callback(a_callback)
+        {
+        }
+        
+        template<
+            std::convertible_to<callback_type> t_any
+        >
+        logger_callback(
+            const t_any& a_any
+        ):
+            logger_callback(a_any)
         {
         }
     
