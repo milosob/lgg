@@ -11,12 +11,11 @@ Characteristic:
 
 Features:
 
-- Supports multiple inputs and outputs at the same time.
-- Based on the user implementation of the record, that fulfills type contract.
+- Supports multiple outputs at the same time.
+- Focused around record type implementation, that fulfills type contract,
   enforced by concepts.
-- User defined formatting.
-- User defined, both static and dynamic filtering.
-- Easy extensible by callbacks.
+- User defined formatting and filtering.
+- Extensible by callbacks.
 - Ability to provide custom log rotation, retention logic and more.
 
 ### Usage
@@ -45,7 +44,7 @@ cmake ../lgg -DLGG_EXAMPLES=ON && make
 sudo cmake --install .
 ```
 
-Import the package into the CMake project:
+Import:
 
 ```cmake
 find_package(lgg CONFIG REQUIRED)
