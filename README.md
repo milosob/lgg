@@ -1,7 +1,6 @@
 ### Description
 
-Simple logging library focused around record implementation with modern syntax
-and configuration by template parameters.
+Logging library focused around record implementation.
 
 Characteristic:
 
